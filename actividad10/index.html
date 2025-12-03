@@ -1,0 +1,944 @@
+<!-- Estructura básica del documento HTML -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Productos Notables</title>
+<style>
+      @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary-color: #00c8ff;
+      --secondary-color: #003a66;
+      --accent-color: #52e0ff;
+      --success-color: #26ffe0;
+      --danger-color: #ff3b6a;
+      --background: #010409;
+      --text-primary: #d6f7ff;
+      --text-secondary: #8ed2ff;
+      --border-color: #155e85;
+      --shadow: 0 0 15px rgba(82, 224, 255, 0.15);
+      --shadow-lg: 0 0 30px rgba(82, 224, 255, 0.3);
+    }
+
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: radial-gradient(circle at top, #021019, #000);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* ====== FONDO ANIMADO FORERUNNER ====== */
+    .forerunner-background {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background: radial-gradient(circle at center, rgba(0, 150, 255, 0.05), transparent 70%);
+      z-index: 0;
+    }
+
+    .circle {
+      position: absolute;
+      border: 1px solid rgba(0, 200, 255, 0.3);
+      border-radius: 50%;
+      animation: rotate 25s linear infinite;
+      box-shadow: 0 0 20px rgba(82, 224, 255, 0.2);
+    }
+    .circle:nth-child(1){width:400px;height:400px;top:10%;left:20%;}
+    .circle:nth-child(2){width:600px;height:600px;bottom:10%;right:15%;animation-duration:35s;animation-direction:reverse;}
+    .circle:nth-child(3){width:900px;height:900px;top:40%;left:50%;transform:translate(-50%,-50%);animation-duration:45s;}
+
+    @keyframes rotate {
+      0% {transform: rotate(0deg);}
+      100% {transform: rotate(360deg);}
+    }
+
+    .pulse {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(0,255,255,0.15), transparent 70%);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: pulseEffect 5s ease-in-out infinite;
+    }
+
+    @keyframes pulseEffect {
+      0%, 100% {transform: translate(-50%, -50%) scale(1); opacity: 0.3;}
+      50% {transform: translate(-50%, -50%) scale(1.2); opacity: 0.8;}
+    }
+
+    .binary {
+      position: absolute;
+      color: rgba(82, 224, 255, 0.1);
+      font-size: 1rem;
+      user-select: none;
+      animation: floatData 12s linear infinite;
+    }
+
+    @keyframes floatData {
+      0% {transform: translateY(100vh); opacity: 0;}
+      10% {opacity: 1;}
+      90% {opacity: 1;}
+      100% {transform: translateY(-100vh); opacity: 0;}
+    }
+
+    .binary:nth-child(4){left:10%;animation-delay:0s;}
+    .binary:nth-child(5){left:30%;animation-delay:3s;}
+    .binary:nth-child(6){left:60%;animation-delay:6s;}
+    .binary:nth-child(7){left:80%;animation-delay:9s;}
+
+    /* ====== EFECTO DE REACCIÓN AL CLIC ====== */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      transform: scale(0);
+      background: radial-gradient(circle, rgba(0,200,255,0.5) 0%, transparent 70%);
+      animation: rippleAnim 1s ease-out forwards;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes rippleAnim {
+      to { transform: scale(8); opacity: 0; }
+    }
+
+    /* ====== CONTENIDO PRINCIPAL ====== */
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      padding: 40px 20px;
+      background: linear-gradient(135deg, #00233d, #003a66);
+      color: var(--primary-color);
+      border-radius: 12px;
+      margin-bottom: 30px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--accent-color);
+      text-shadow: 0 0 20px var(--primary-color);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      top: 0; left: -50%;
+      width: 200%; height: 100%;
+      background: linear-gradient(120deg, transparent 0%, rgba(82,224,255,0.1) 50%, transparent 100%);
+      animation: holoSweep 8s linear infinite;
+    }
+
+    @keyframes holoSweep {
+      0% {transform: translateX(-100%);}
+      100% {transform: translateX(100%);}
+    }
+
+    header h1 {
+      font-size: 2.6rem;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      letter-spacing: 2px;
+      color: var(--accent-color);
+      text-transform: uppercase;
+    }
+
+    main { display: flex; flex-direction: column; gap: 30px; }
+
+    .controls, .visualization, .historial-container {
+      background: rgba(5, 15, 25, 0.85);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
+      backdrop-filter: blur(10px);
+    }
+
+    .form-group label { color: var(--accent-color); font-weight: 600; }
+
+    .input-field {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(0, 20, 30, 0.6);
+      color: var(--text-primary);
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: 0.3s;
+    }
+
+    .input-field:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 20px rgba(82,224,255,0.4);
+      outline: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, var(--primary-color), #007cff);
+      color: #000;
+      font-weight: 700;
+      padding: 14px 24px;
+      border: none;
+      border-radius: 8px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(82,224,255,0.5);
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-color);
+      transform: translateY(-2px);
+      box-shadow: 0 0 25px rgba(82,224,255,0.8);
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border-color);
+      margin-top: 40px;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+</style>
+</style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+</head>
+<body>
+    <!-- ===== FONDO ANIMADO ===== -->
+  <div class="forerunner-background">
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="pulse"></div>
+    <div class="container">  
+         <div class="binary"></div>
+    <div class="binary"></div>
+    <div class="binary"></div>
+    <div class="binary"></div>
+  </div> 
+  </div>
+
+        <header>
+            <h1>Calculadora de Productos Notables</h1>
+            <p class="subtitle">Actividad #10 - Unidad II</p>
+        </header>
+
+           <div class="teacher-form">
+                <div class="form-group">
+                    <label for="nombres">Nombres: Jorge Javier Pedroza Romero</label> 
+                </div>
+
+            <div class="student-form">
+                <div class="form-group">
+                    <label for="nombres">Nombres: Dylan Emmanuel</label> 
+                </div>
+                
+                <div class="form-group">
+                    <label for="apellidos">Apellidos: Mosqueda Lugo</label> 
+                </div>
+                
+                <div class="form-group">
+                    <label for="grupo">Grupo: 1B</label>    
+                </div>
+                
+                <div class="form-group">
+                    <label for="fecha">Fecha: 14/10/2025</label>
+                </div>
+            </div>
+        <main>
+            <section class="controls">
+                <div class="form-group">
+                    <label for="modo">Modo de Cálculo:</label>
+                    <select id="modo" class="input-field">
+                        <option value="numerico">Numérico (solo números)</option>
+                        <option value="algebraico">Algebraico (con variables)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tipo">Tipo de Producto Notable:</label>
+                    <select id="tipo" class="input-field">
+                        <option value="binomio-cuadrado-suma">Binomio al Cuadrado (a + b)²</option>
+                        <option value="binomio-cuadrado-resta">Binomio al Cuadrado (a - b)²</option>
+                        <option value="binomio-cubo-suma">Binomio al Cubo (a + b)³</option>
+                        <option value="binomio-cubo-resta">Binomio al Cubo (a - b)³</option>
+                        <option value="termino-comun">Término Común (x + a)(x + b)</option>
+                        <option value="conjugados">Binomios Conjugados (a + b)(a - b)</option>
+                    </select>
+                </div>
+
+                <div class="inputs-container">
+                    <div class="form-group">
+                        <label for="valor-a">Valor de a:</label>
+                        <input type="text" id="valor-a" class="input-field" value="3" placeholder="Ej: 3 o 3x">
+                        <small class="input-hint">Numérico: 3 | Algebraico: 3x, 5y</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="valor-b">Valor de b:</label>
+                        <input type="text" id="valor-b" class="input-field" value="2" placeholder="Ej: 2 o 5y">
+                        <small class="input-hint">Numérico: 2 | Algebraico: 5y, 2z</small>
+                    </div>
+                </div>
+
+                <button id="calcular" class="btn-primary">Calcular</button>
+            </section>
+
+            <section class="results">
+                <div class="result-card">
+                    <h2>Expresión Original</h2>
+                    <div id="expresion-original" class="expression">-</div>
+                </div>
+
+                <div class="result-card">
+                    <h2>Fórmula Aplicada</h2>
+                    <div id="formula" class="formula">-</div>
+                </div>
+
+                <div class="result-card">
+                    <h2>Desarrollo Paso a Paso</h2>
+                    <div id="desarrollo" class="steps">-</div>
+                </div>
+
+                <div class="result-card">
+                    <h2>Forma Expandida</h2>
+                    <div id="expandida" class="expression-result">-</div>
+                </div>
+
+                <div class="result-card">
+                    <h2>Resultado Numérico</h2>
+                    <div id="resultado-numerico" class="numeric-result">-</div>
+                </div>
+
+                <div class="result-card">
+                    <h2>Verificación</h2>
+                    <div id="verificacion" class="verification">-</div>
+                </div>
+            </section>
+
+            <section class="visualization">
+                <h2>Representación Geométrica</h2>
+                <canvas id="canvas-geometrico" width="400" height="400"></canvas>
+                <p id="descripcion-geometrica" class="geo-description"></p>
+            </section>
+
+            <section class="historial-container">
+                <div class="historial-header">
+                    <h2>Historial de Cálculos</h2>
+                    <button id="limpiar-historial" class="btn-secondary">Limpiar</button>
+                </div>
+                <div id="historial" class="historial"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 - Fundamentos de Álgebra - TSU en Desarrollo de Software</p>
+        </footer>
+    </div>
+<script>
+    // Variables globales
+let historialCalculos = [];
+
+// Elementos del DOM
+const btnCalcular = document.getElementById('calcular');
+const selectTipo = document.getElementById('tipo');
+const selectModo = document.getElementById('modo');
+const inputA = document.getElementById('valor-a');
+const inputB = document.getElementById('valor-b');
+const btnLimpiarHistorial = document.getElementById('limpiar-historial');
+
+// Elementos de resultados
+const expresionOriginal = document.getElementById('expresion-original');
+const formula = document.getElementById('formula');
+const desarrollo = document.getElementById('desarrollo');
+const expandida = document.getElementById('expandida');
+const resultadoNumerico = document.getElementById('resultado-numerico');
+const verificacion = document.getElementById('verificacion');
+const canvas = document.getElementById('canvas-geometrico');
+const descripcionGeometrica = document.getElementById('descripcion-geometrica');
+const historial = document.getElementById('historial');
+
+// Event Listeners
+btnCalcular.addEventListener('click', calcular);
+btnLimpiarHistorial.addEventListener('click', limpiarHistorial);
+selectModo.addEventListener('change', actualizarPlaceholders);
+
+// Cargar historial del localStorage al iniciar
+window.addEventListener('load', () => {
+    cargarHistorial();
+    mostrarHistorial();
+});
+
+function actualizarPlaceholders() {
+    const modo = selectModo.value;
+    if (modo === 'numerico') {
+        inputA.placeholder = 'Ej: 3';
+        inputB.placeholder = 'Ej: 2';
+        inputA.value = '3';
+        inputB.value = '2';
+    } else {
+        inputA.placeholder = 'Ej: 3x';
+        inputB.placeholder = 'Ej: 5y';
+        inputA.value = '3x';
+        inputB.value = '5y';
+    }
+}
+
+// Función principal de cálculo
+function calcular() {
+    const tipo = selectTipo.value;
+    const modo = selectModo.value;
+    const a = inputA.value.trim();
+    const b = inputB.value.trim();
+
+    if (!a || !b) {
+        alert('Por favor ingresa valores en ambos campos');
+        return;
+    }
+
+    try {
+        let resultado;
+
+        if (modo === 'numerico') {
+            resultado = calcularNumerico(tipo, a, b);
+        } else {
+            resultado = calcularAlgebraico(tipo, a, b);
+        }
+
+        mostrarResultados(resultado);
+        if (modo === 'numerico') {
+            dibujarGeometria(tipo, parseFloat(a), parseFloat(b), resultado);
+        } else {
+            limpiarCanvas();
+        }
+        agregarAlHistorial(resultado);
+    } catch (error) {
+        alert('Error en el cálculo: ' + error.message);
+        console.error(error);
+    }
+}
+
+// Cálculo numérico
+function calcularNumerico(tipo, aStr, bStr) {
+    const a = parseFloat(aStr);
+    const b = parseFloat(bStr);
+
+    if (isNaN(a) || isNaN(b)) {
+        throw new Error('Los valores deben ser numéricos');
+    }
+
+    switch(tipo) {
+        case 'binomio-cuadrado-suma':
+            return binomioCuadradoSumaNumerico(a, b);
+        case 'binomio-cuadrado-resta':
+            return binomioCuadradoRestaNumerico(a, b);
+        case 'binomio-cubo-suma':
+            return binomioCuboSumaNumerico(a, b);
+        case 'binomio-cubo-resta':
+            return binomioCuboRestaNumerico(a, b);
+        case 'termino-comun':
+            return terminoComunNumerico(a, b);
+        case 'conjugados':
+            return conjugadosNumerico(a, b);
+    }
+}
+
+// Cálculo algebraico usando Math.js
+function calcularAlgebraico(tipo, a, b) {
+    try {
+        switch(tipo) {
+            case 'binomio-cuadrado-suma':
+                return binomioCuadradoSumaAlgebraico(a, b);
+            case 'binomio-cuadrado-resta':
+                return binomioCuadradoRestaAlgebraico(a, b);
+            case 'binomio-cubo-suma':
+                return binomioCuboSumaAlgebraico(a, b);
+            case 'binomio-cubo-resta':
+                return binomioCuboRestaAlgebraico(a, b);
+            case 'termino-comun':
+                return terminoComunAlgebraico(a, b);
+            case 'conjugados':
+                return conjugadosAlgebraico(a, b);
+        }
+    } catch (error) {
+        throw new Error('Error en cálculo algebraico: ' + error.message);
+    }
+}
+
+// Funciones algebraicas con Math.js
+function binomioCuadradoSumaAlgebraico(a, b) {
+    const expr = `(${a} + ${b})^2`;
+    const expandido = math.simplify(expr).toString();
+    
+    return {
+        tipo: 'Binomio al Cuadrado (Suma)',
+        expresion: `(${a} + ${b})²`,
+        formula: '(a + b)² = a² + 2ab + b²',
+        pasos: [
+            `Paso 1: Expresión: (${a} + ${b})²`,
+            `Paso 2: Aplicar fórmula: a² + 2ab + b²`,
+            `Paso 3: a² = (${a})²`,
+            `Paso 4: 2ab = 2(${a})(${b})`,
+            `Paso 5: b² = (${b})²`,
+            `Paso 6: Resultado expandido`
+        ],
+        expandida: expandido,
+        numerico: 'Modo algebraico',
+        verificacion: true,
+        resultadoDirecto: expandido
+    };
+}
+
+function binomioCuadradoRestaAlgebraico(a, b) {
+    const expr = `(${a} - ${b})^2`;
+    const expandido = math.simplify(expr).toString();
+    
+    return {
+        tipo: 'Binomio al Cuadrado (Resta)',
+        expresion: `(${a} - ${b})²`,
+        formula: '(a - b)² = a² - 2ab + b²',
+        pasos: [
+            `Paso 1: Expresión: (${a} - ${b})²`,
+            `Paso 2: Aplicar fórmula: a² - 2ab + b²`,
+            `Paso 3: a² = (${a})²`,
+            `Paso 4: 2ab = 2(${a})(${b})`,
+            `Paso 5: b² = (${b})²`,
+            `Paso 6: Resultado expandido`
+        ],
+        expandida: expandido,
+        numerico: 'Modo algebraico',
+        verificacion: true,
+        resultadoDirecto: expandido
+    };
+}
+
+function binomioCuboSumaAlgebraico(a, b) {
+    const expr = `(${a} + ${b})^3`;
+    const expandido = math.simplify(expr).toString();
+    
+    return {
+        tipo: 'Binomio al Cubo (Suma)',
+        expresion: `(${a} + ${b})³`,
+        formula: '(a + b)³ = a³ + 3a²b + 3ab² + b³',
+        pasos: [
+            `Paso 1: Expresión: (${a} + ${b})³`,
+            `Paso 2: Aplicar fórmula del cubo`,
+            `Paso 3: a³ = (${a})³`,
+            `Paso 4: 3a²b = 3(${a})²(${b})`,
+            `Paso 5: 3ab² = 3(${a})(${b})²`,
+            `Paso 6: b³ = (${b})³`,
+            `Paso 7: Resultado expandido`
+        ],
+        expandida: expandido,
+        numerico: 'Modo algebraico',
+        verificacion: true,
+        resultadoDirecto: expandido
+    };
+}
+
+function binomioCuboRestaAlgebraico(a, b) {
+    const expr = `(${a} - ${b})^3`;
+    const expandido = math.simplify(expr).toString();
+    
+    return {
+        tipo: 'Binomio al Cubo (Resta)',
+        expresion: `(${a} - ${b})³`,
+        formula: '(a - b)³ = a³ - 3a²b + 3ab² - b³',
+        pasos: [
+            `Paso 1: Expresión: (${a} - ${b})³`,
+            `Paso 2: Aplicar fórmula del cubo con resta`,
+            `Paso 3: a³ = (${a})³`,
+            `Paso 4: 3a²b = 3(${a})²(${b})`,
+            `Paso 5: 3ab² = 3(${a})(${b})²`,
+            `Paso 6: b³ = (${b})³`,
+            `Paso 7: Resultado con signos alternados`
+        ],
+        expandida: expandido,
+        numerico: 'Modo algebraico',
+        verificacion: true,
+        resultadoDirecto: expandido
+    };
+}
+
+function terminoComunAlgebraico(a, b) {
+    const expr = `(x + ${a}) * (x + ${b})`;
+    const expandido = math.simplify(expr).toString();
+    
+    return {
+        tipo: 'Término Común',
+        expresion: `(x + ${a})(x + ${b})`,
+        formula: '(x + a)(x + b) = x² + (a+b)x + ab',
+        pasos: [
+            `Paso 1: Expresión: (x + ${a})(x + ${b})`,
+            `Paso 2: Término cuadrático: x²`,
+            `Paso 3: Término lineal: (${a} + ${b})x`,
+            `Paso 4: Término independiente: (${a})(${b})`,
+            `Paso 5: Resultado expandido`
+        ],
+        expandida: expandido,
+        numerico: 'Modo algebraico',
+        verificacion: true,
+        resultadoDirecto: expandido
+    };
+}
+
+function conjugadosAlgebraico(a, b) {
+    const expr = `(${a} + ${b}) * (${a} - ${b})`;
+    const expandido = math.simplify(expr).toString();
+    
+    return {
+        tipo: 'Binomios Conjugados',
+        expresion: `(${a} + ${b})(${a} - ${b})`,
+        formula: '(a + b)(a - b) = a² - b²',
+        pasos: [
+            `Paso 1: Expresión: (${a} + ${b})(${a} - ${b})`,
+            `Paso 2: Aplicar diferencia de cuadrados`,
+            `Paso 3: a² = (${a})²`,
+            `Paso 4: b² = (${b})²`,
+            `Paso 5: Resultado: a² - b²`
+        ],
+        expandida: expandido,
+        numerico: 'Modo algebraico',
+        verificacion: true,
+        resultadoDirecto: expandido
+    };
+}
+
+// Funciones numéricas
+function binomioCuadradoSumaNumerico(a, b) {
+    const a2 = a * a;
+    const ab2 = 2 * a * b;
+    const b2 = b * b;
+    const resultadoFinal = a2 + ab2 + b2;
+    const resultadoDirecto = Math.pow(a + b, 2);
+
+    return {
+        tipo: 'Binomio al Cuadrado (Suma)',
+        expresion: `(${a} + ${b})²`,
+        formula: '(a + b)² = a² + 2ab + b²',
+        pasos: [
+            `Paso 1: Identificar a = ${a} y b = ${b}`,
+            `Paso 2: Calcular a² = ${a}² = ${a2}`,
+            `Paso 3: Calcular 2ab = 2(${a})(${b}) = ${ab2}`,
+            `Paso 4: Calcular b² = ${b}² = ${b2}`,
+            `Paso 5: Sumar todos los términos: ${a2} + ${ab2} + ${b2} = ${resultadoFinal}`
+        ],
+        expandida: `${a2} + ${ab2} + ${b2}`,
+        numerico: resultadoFinal.toFixed(4),
+        verificacion: Math.abs(resultadoFinal - resultadoDirecto) < 0.0001,
+        resultadoDirecto: resultadoDirecto.toFixed(4)
+    };
+}
+
+function binomioCuadradoRestaNumerico(a, b) {
+    const a2 = a * a;
+    const ab2 = 2 * a * b;
+    const b2 = b * b;
+    const resultadoFinal = a2 - ab2 + b2;
+    const resultadoDirecto = Math.pow(a - b, 2);
+
+    return {
+        tipo: 'Binomio al Cuadrado (Resta)',
+        expresion: `(${a} - ${b})²`,
+        formula: '(a - b)² = a² - 2ab + b²',
+        pasos: [
+            `Paso 1: Identificar a = ${a} y b = ${b}`,
+            `Paso 2: Calcular a² = ${a}² = ${a2}`,
+            `Paso 3: Calcular 2ab = 2(${a})(${b}) = ${ab2}`,
+            `Paso 4: Calcular b² = ${b}² = ${b2}`,
+            `Paso 5: Restar y sumar: ${a2} - ${ab2} + ${b2} = ${resultadoFinal}`
+        ],
+        expandida: `${a2} - ${ab2} + ${b2}`,
+        numerico: resultadoFinal.toFixed(4),
+        verificacion: Math.abs(resultadoFinal - resultadoDirecto) < 0.0001,
+        resultadoDirecto: resultadoDirecto.toFixed(4)
+    };
+}
+
+function binomioCuboSumaNumerico(a, b) {
+    const a3 = a * a * a;
+    const a2b3 = 3 * a * a * b;
+    const ab23 = 3 * a * b * b;
+    const b3 = b * b * b;
+    const resultadoFinal = a3 + a2b3 + ab23 + b3;
+    const resultadoDirecto = Math.pow(a + b, 3);
+
+    return {
+        tipo: 'Binomio al Cubo (Suma)',
+        expresion: `(${a} + ${b})³`,
+        formula: '(a + b)³ = a³ + 3a²b + 3ab² + b³',
+        pasos: [
+            `Paso 1: Identificar a = ${a} y b = ${b}`,
+            `Paso 2: Calcular a³ = ${a}³ = ${a3}`,
+            `Paso 3: Calcular 3a²b = 3(${a}²)(${b}) = ${a2b3}`,
+            `Paso 4: Calcular 3ab² = 3(${a})(${b}²) = ${ab23}`,
+            `Paso 5: Calcular b³ = ${b}³ = ${b3}`,
+            `Paso 6: Sumar: ${a3} + ${a2b3} + ${ab23} + ${b3} = ${resultadoFinal}`
+        ],
+        expandida: `${a3} + ${a2b3} + ${ab23} + ${b3}`,
+        numerico: resultadoFinal.toFixed(4),
+        verificacion: Math.abs(resultadoFinal - resultadoDirecto) < 0.0001,
+        resultadoDirecto: resultadoDirecto.toFixed(4)
+    };
+}
+
+function binomioCuboRestaNumerico(a, b) {
+    const a3 = a * a * a;
+    const a2b3 = 3 * a * a * b;
+    const ab23 = 3 * a * b * b;
+    const b3 = b * b * b;
+    const resultadoFinal = a3 - a2b3 + ab23 - b3;
+    const resultadoDirecto = Math.pow(a - b, 3);
+
+    return {
+        tipo: 'Binomio al Cubo (Resta)',
+        expresion: `(${a} - ${b})³`,
+        formula: '(a - b)³ = a³ - 3a²b + 3ab² - b³',
+        pasos: [
+            `Paso 1: Identificar a = ${a} y b = ${b}`,
+            `Paso 2: Calcular a³ = ${a}³ = ${a3}`,
+            `Paso 3: Calcular 3a²b = 3(${a}²)(${b}) = ${a2b3}`,
+            `Paso 4: Calcular 3ab² = 3(${a})(${b}²) = ${ab23}`,
+            `Paso 5: Calcular b³ = ${b}³ = ${b3}`,
+            `Paso 6: Alternar signos: ${a3} - ${a2b3} + ${ab23} - ${b3} = ${resultadoFinal}`
+        ],
+        expandida: `${a3} - ${a2b3} + ${ab23} - ${b3}`,
+        numerico: resultadoFinal.toFixed(4),
+        verificacion: Math.abs(resultadoFinal - resultadoDirecto) < 0.0001,
+        resultadoDirecto: resultadoDirecto.toFixed(4)
+    };
+}
+
+function terminoComunNumerico(a, b) {
+    const x2 = 1;
+    const sumaAB = a + b;
+    const productoAB = a * b;
+    const resultadoFinal = x2 + sumaAB + productoAB;
+    const resultadoDirecto = (1 + a) * (1 + b);
+
+    return {
+        tipo: 'Término Común',
+        expresion: `(x + ${a})(x + ${b})`,
+        formula: '(x + a)(x + b) = x² + (a+b)x + ab',
+        pasos: [
+            `Paso 1: Identificar a = ${a} y b = ${b}`,
+            `Paso 2: Calcular x² = 1`,
+            `Paso 3: Calcular (a + b)x = (${a} + ${b})x = ${sumaAB}x`,
+            `Paso 4: Calcular ab = (${a})(${b}) = ${productoAB}`,
+            `Paso 5: Resultado: x² + ${sumaAB}x + ${productoAB}`
+        ],
+        expandida: `x² + ${sumaAB}x + ${productoAB}`,
+        numerico: `Para x=1: ${resultadoFinal.toFixed(4)}`,
+        verificacion: Math.abs(resultadoFinal - resultadoDirecto) < 0.0001,
+        resultadoDirecto: resultadoDirecto.toFixed(4)
+    };
+}
+
+function conjugadosNumerico(a, b) {
+    const a2 = a * a;
+    const b2 = b * b;
+    const resultadoFinal = a2 - b2;
+    const resultadoDirecto = (a + b) * (a - b);
+
+    return {
+        tipo: 'Binomios Conjugados',
+        expresion: `(${a} + ${b})(${a} - ${b})`,
+        formula: '(a + b)(a - b) = a² - b²',
+        pasos: [
+            `Paso 1: Identificar a = ${a} y b = ${b}`,
+            `Paso 2: Calcular a² = ${a}² = ${a2}`,
+            `Paso 3: Calcular b² = ${b}² = ${b2}`,
+            `Paso 4: Restar: a² - b² = ${a2} - ${b2} = ${resultadoFinal}`
+        ],
+        expandida: `${a2} - ${b2}`,
+        numerico: resultadoFinal.toFixed(4),
+        verificacion: Math.abs(resultadoFinal - resultadoDirecto) < 0.0001,
+        resultadoDirecto: resultadoDirecto.toFixed(4)
+    };
+}
+
+// Mostrar resultados en la interfaz
+function mostrarResultados(resultado) {
+    expresionOriginal.textContent = resultado.expresion;
+    formula.textContent = resultado.formula;
+    
+    desarrollo.innerHTML = '';
+    resultado.pasos.forEach(paso => {
+        const div = document.createElement('div');
+        div.textContent = paso;
+        desarrollo.appendChild(div);
+    });
+
+    expandida.textContent = resultado.expandida;
+    resultadoNumerico.textContent = resultado.numerico;
+
+    if (resultado.verificacion) {
+        verificacion.textContent = `✓ Verificación correcta: ${resultado.resultadoDirecto}`;
+        verificacion.className = 'verification correcto';
+    } else {
+        verificacion.textContent = `✗ Error en verificación`;
+        verificacion.className = 'verification incorrecto';
+    }
+}
+
+function limpiarCanvas() {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#64748b';
+    ctx.font = '16px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('Visualización geométrica', canvas.width/2, canvas.height/2 - 20);
+    ctx.fillText('disponible solo en', canvas.width/2, canvas.height/2);
+    ctx.fillText('modo numérico', canvas.width/2, canvas.height/2 + 20);
+    descripcionGeometrica.textContent = '';
+}
+
+// Dibujar representación geométrica
+function dibujarGeometria(tipo, a, b, resultado) {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const scale = 30;
+
+    if (tipo.includes('cuadrado')) {
+        const lado = (a + Math.abs(b)) * scale;
+        const x = centerX - lado / 2;
+        const y = centerY - lado / 2;
+
+        ctx.strokeStyle = '#2563eb';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(x, y, lado, lado);
+
+        const aScaled = a * scale;
+        const bScaled = Math.abs(b) * scale;
+
+        ctx.fillStyle = 'rgba(37, 99, 235, 0.3)';
+        ctx.fillRect(x, y, aScaled, aScaled);
+        ctx.strokeStyle = '#1e40af';
+        ctx.strokeRect(x, y, aScaled, aScaled);
+        ctx.fillStyle = '#1e293b';
+        ctx.font = '14px Arial';
+        ctx.fillText('a²', x + aScaled/2 - 10, y + aScaled/2);
+
+        ctx.fillStyle = 'rgba(16, 185, 129, 0.3)';
+        ctx.fillRect(x + aScaled, y, bScaled, aScaled);
+        ctx.fillRect(x, y + aScaled, aScaled, bScaled);
+        ctx.fillStyle = '#1e293b';
+        ctx.fillText('ab', x + aScaled + bScaled/2 - 10, y + aScaled/2);
+        ctx.fillText('ab', x + aScaled/2 - 10, y + aScaled + bScaled/2);
+
+        ctx.fillStyle = 'rgba(239, 68, 68, 0.3)';
+        ctx.fillRect(x + aScaled, y + aScaled, bScaled, bScaled);
+        ctx.strokeStyle = '#dc2626';
+        ctx.strokeRect(x + aScaled, y + aScaled, bScaled, bScaled);
+        ctx.fillStyle = '#1e293b';
+        ctx.fillText('b²', x + aScaled + bScaled/2 - 10, y + aScaled + bScaled/2);
+
+        descripcionGeometrica.textContent = `Área total = (${a} + ${b})² = ${resultado.numerico} unidades²`;
+
+    } else if (tipo === 'conjugados') {
+        const a2 = a * scale;
+        const b2 = Math.abs(b) * scale;
+
+        ctx.fillStyle = 'rgba(37, 99, 235, 0.3)';
+        ctx.fillRect(centerX - a2/2, centerY - a2/2, a2, a2);
+        ctx.strokeStyle = '#2563eb';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(centerX - a2/2, centerY - a2/2, a2, a2);
+
+        ctx.fillStyle = 'rgba(239, 68, 68, 0.5)';
+        ctx.fillRect(centerX - b2/2, centerY - b2/2, b2, b2);
+        ctx.strokeStyle = '#dc2626';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(centerX - b2/2, centerY - b2/2, b2, b2);
+
+        ctx.fillStyle = '#1e293b';
+        ctx.font = '16px Arial';
+        ctx.fillText('a²', centerX - a2/2 + 10, centerY - a2/2 + 20);
+        ctx.fillText('b²', centerX - 10, centerY + 5);
+
+        descripcionGeometrica.textContent = `Diferencia de áreas = ${a}² - ${b}² = ${resultado.numerico} unidades²`;
+
+    } else {
+        limpiarCanvas();
+    }
+}
+
+// Gestión del historial
+function agregarAlHistorial(resultado) {
+    const item = {
+        fecha: new Date().toLocaleString('es-MX'),
+        tipo: resultado.tipo,
+        expresion: resultado.expresion,
+        resultado: resultado.expandida || resultado.numerico
+    };
+
+    historialCalculos.unshift(item);
+    if (historialCalculos.length > 10) {
+        historialCalculos.pop();
+    }
+
+    guardarHistorial();
+    mostrarHistorial();
+}
+
+function mostrarHistorial() {
+    if (historialCalculos.length === 0) {
+        historial.innerHTML = '<div class="historial-vacio">No hay cálculos en el historial</div>';
+        return;
+    }
+
+    historial.innerHTML = '';
+    historialCalculos.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'historial-item';
+        div.innerHTML = `
+            <strong>${item.tipo}</strong><br>
+            ${item.expresion} = ${item.resultado}<br>
+            <small>${item.fecha}</small>
+        `;
+        historial.appendChild(div);
+    });
+}
+
+function limpiarHistorial() {
+    if (confirm('¿Estás seguro de limpiar el historial?')) {
+        historialCalculos = [];
+        guardarHistorial();
+        mostrarHistorial();
+    }
+}
+
+function guardarHistorial() {
+    localStorage.setItem('historialProductosNotables', JSON.stringify(historialCalculos));
+}
+
+function cargarHistorial() {
+    const guardado = localStorage.getItem('historialProductosNotables');
+    if (guardado) {
+        historialCalculos = JSON.parse(guardado);
+    }
+}
+</script>
+</body>
+</html>
